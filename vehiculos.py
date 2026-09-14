@@ -6,18 +6,18 @@ class vehiculo:
         self.modelo = modelo
         self.latitud = latitud
         self.longitud = longitud
-        self.__kilometros = kilometros
+        self._kilometros = kilometros
         
 
     
     def requiere_mantenimiento(self):
-        if self.__kilometros < 0:
+        if self._kilometros < 0:
             "No puede tener valores negativos"
             pass
         
 class furgoneta(vehiculo):
     def requiere_mantenimiento(self):
-        if self.__kilometros >= 15000:
+        if self._kilometros >= 15000:
             "El vehiculo requiere mantenimiento"
         else:
             "el vehiculo esta operativo"
@@ -25,7 +25,7 @@ class furgoneta(vehiculo):
     
 class VehiculoElectrico(vehiculo):
     def requiere_mantenimiento(self):
-        if self.__kilometros >= 5000:
+        if self._kilometros >= 5000:
             "El vehiculo requiere mantenimiento"
         else:
             "el vehiculo esta operativo"
