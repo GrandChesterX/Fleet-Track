@@ -45,7 +45,7 @@ df = pd.DataFrame(datos)
 def cargar_flota(self):
     return pd.DataFrame(datos)    
 
-def instanciar_flota(vehiculo):
+def obtener_flota_inicial(vehiculo):
     return[
             VehiculoElectrico( "1552 VX", "Mercedes 2",13500,42.8550,-2.6716),
             furgoneta( "1889 BG","BMV 4",8000,42.8467,-2.6716),
