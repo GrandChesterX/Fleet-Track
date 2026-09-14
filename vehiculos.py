@@ -42,10 +42,10 @@ datos = {
 
 df = pd.DataFrame(datos)
 
-def cargar_flota(self):
+def cargar_flota():
     return pd.DataFrame(datos)    
 
-def obtener_flota_inicial(vehiculo):
+def obtener_flota_inicial():
     return[
             VehiculoElectrico( "1552 VX", "Mercedes 2",13500,42.8550,-2.6716),
             furgoneta( "1889 BG","BMV 4",8000,42.8467,-2.6716),
