@@ -1,0 +1,6 @@
+streamlit
+streamlit-authenticator
+pandas
+streamlit-aggrid
+folium
+streamlit-folium
