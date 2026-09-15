@@ -1,5 +1,4 @@
 import pandas as pd
-from sqlalchemy import true
 
 class vehiculo:
     def __init__(self, matricula, modelo, kilometros, latitud, longitud):
@@ -7,8 +6,7 @@ class vehiculo:
         self.modelo = modelo
         self.lat = latitud
         self.lon = longitud
-        self.__kilometros = kilometros
-        
+        self.set_kilometros(kilometros)
 
     def get_kilometros(self):
         return self.__kilometros
