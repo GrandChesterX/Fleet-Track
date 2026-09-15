@@ -4,32 +4,31 @@ class vehiculo:
     def __init__(self, matricula, modelo, kilometros, latitud, longitud):
         self.matricula = matricula
         self.modelo = modelo
-        self.latitud = latitud
-        self.longitud = longitud
-        self.__kilometros = kilometros
-        
+        self.lat = latitud
+        self.lon = longitud
+        self.set_kilometros(kilometros)
 
+    def get_kilometros(self):
+        return self.__kilometros
+    
+    
+    def set_kilometros(self, valor):
+        if valor < 0:
+            raise ValueError("El cuentakilómetros nunca puede recibir valores negativos.")
+        self.__kilometros = valor
+    
+    
     
     def requiere_mantenimiento(self):
-        if self.__kilometros < 0:
-            "No puede tener valores negativos"
-            pass
-        
+        raise NotImplementedError("Este método debe ser sobrescrito por las clases hijas")
+
 class furgoneta(vehiculo):
     def requiere_mantenimiento(self):
-        if self.__kilometros >= 15000:
-            "El vehiculo requiere mantenimiento"
-        else:
-            "el vehiculo esta operativo"
-            return 
-    
+        return self.get_kilometros() >= 15000
+
 class VehiculoElectrico(vehiculo):
     def requiere_mantenimiento(self):
-        if self.__kilometros >= 5000:
-            "El vehiculo requiere mantenimiento"
-        else:
-            "el vehiculo esta operativo"
-            return 
+        return self.get_kilometros() >= 5000
 
 datos = {
     "Matricula":["1552 VX", "1889 BG", "2555 HH"],
@@ -42,10 +41,10 @@ datos = {
 
 df = pd.DataFrame(datos)
 
-def cargar_flota(self):
+def cargar_flota():
     return pd.DataFrame(datos)    
 
-def obtener_flota_inicial(vehiculo):
+def obtener_flota_inicial():
     return[
             VehiculoElectrico( "1552 VX", "Mercedes 2",13500,42.8550,-2.6716),
             furgoneta( "1889 BG","BMV 4",8000,42.8467,-2.6716),
