@@ -1,46 +1,46 @@
-import streamlit as st
-import pandas as pd
-from st_aggrid import AgGrid, GridOptionsBuilder
-from streamlit_folium import st_folium
-import folium
+import pandas as pd # Importamos pandas para trabajar con datos y tablas
+from st_aggrid import GridOptionsBuilder # Importamos la herramienta para configurar la tabla AgGrid
+import folium # Importamos folium para crear el mapa interactivo
 
+# Función que recibe la lista de objetos vehículo y prepara todo para la interfaz
 def renderizar_panel_y_mapa(vehiculos):
-    st.subheader("Panel Avanzado de Flota (AgGrid)")
-# se crea los datos delos vehiculos 
+    # 1. Creamos una lista de diccionarios recorriendo los objetos de la flota
     data = [{
-        "Matrícula": v.matricula,
-        "Modelo": v.modelo,
-        "Kilómetros": v.kilometros,
+        "Matrícula": v.matricula, # Mostramos la matrícula del vehiculo
+        "Modelo": v.modelo, # Mostramos el modelo del vehiculo
+        "Kilómetros": v.get_kilometros(), # Usamos el getter para obtener los kilómetros del vehiculo
+        # Usamos un if  para indicar el estado del vehiculo
         "Estado Taller": "Requiere Taller" if v.requiere_mantenimiento() else "Operativo",
-        "Latitud": v.lat,
-        "Longitud": v.lon
-    } for v in vehiculos]
+        "Latitud": v.lat, # Extraemos latitud
+        "Longitud": v.lon # Extraemos longitud
+    } for v in vehiculos] # Este bucle for llena la lista 'data'
 
+    #  Convertimos los datos de los vehículos en un DataFrame
     df = pd.DataFrame(data)
- # se crea las tablas utilizando Agrid
+    
+    # 2. Configuramos la tabla avanzada AgGrid usando nuestro DataFrame
     gb = GridOptionsBuilder.from_dataframe(df)
-    
+    # Añadimos la opción de seleccionar una sola fila con una casilla (checkbox)
     gb.configure_selection(selection_mode='single', use_checkbox=True)
+    # Construimos las opciones finales de la tabla
     grid_options = gb.build()
-    
-    AgGrid(df, gridOptions=grid_options, fit_columns_on_grid_load=True)
 
-    st.subheader("Geolocalización en Vivo - Vitoria-Gasteiz")
+    # 3. Creamos el mapa base de Folium centrado en Vitoria-Gasteiz
     m = folium.Map(location=[42.8467, -2.6716], zoom_start=13)
 
-    for v in vehiculos:
-        color = 'red' if v.requiere_mantenimiento() else 'green'
-        estado_texto = "Requiere Taller" if v.requiere_mantenimiento() else "Operativo"
+    # 4. Usamos iterrows() para recorrer las filas del DataFrame
+    for index, row in df.iterrows():
+        # Si la columna 'Estado Taller' dice 'Requiere Taller', el color será rojo, si no, verde
+        color = 'red' if row["Estado Taller"] == "Requiere Taller" else 'green'
         
+        # Añadimos un marcador al mapa en las coordenadas exactas de esta fila
         folium.Marker(
-            [v.lat, v.lon],
-            popup=f"<b>{v.modelo}</b><br>Matrícula: {v.matricula}<br>Estado: {estado_texto}",
+            location=[row["Latitud"], row["Longitud"]], # Coordenadas del marcador
+            # Creamos el texto del globo (popup) mezclando HTML y datos del DataFrame
+            popup=f"<b>{row['Modelo']}</b><br>Matrícula: {row['Matrícula']}<br>Estado: {row['Estado Taller']}",
+            # Configuramos el icono del marcador, su color y el tipo (truck = camión)
             icon=folium.Icon(color=color, icon='truck', prefix='fa')
-        ).add_to(m)
+        ).add_to(m) # Añadimos el marcador al mapa 'm'
 
-    mostrar_mapa = st_folium(m, width=700, height=500)
-    
-    if mostrar_mapa and mostrar_mapa.get("last_clicked"):
-        lat_click = mostrar_mapa["last_clicked"]["lat"]
-        lon_click = mostrar_mapa["last_clicked"]["lng"]
-        st.info(f"Coordenadas seleccionadas en el mapa: Lat {lat_click}, Lon {lon_click}")
+    # La función devuelve tres cosas: el DataFrame, las opciones de la tabla y el mapa terminado
+    return df, grid_options, m
