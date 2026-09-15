@@ -1,35 +1,36 @@
 import pandas as pd
+from sqlalchemy import true
 
 class vehiculo:
     def __init__(self, matricula, modelo, kilometros, latitud, longitud):
         self.matricula = matricula
         self.modelo = modelo
-        self.latitud = latitud
-        self.longitud = longitud
-        self._kilometros = kilometros
+        self.lat = latitud
+        self.lon = longitud
+        self.__kilometros = kilometros
         
 
+    def get_kilometros(self):
+        return self.__kilometros
+    
+    
+    def set_kilometros(self, valor):
+        if valor < 0:
+            raise ValueError("El cuentakilómetros nunca puede recibir valores negativos.")
+        self.__kilometros = valor
+    
+    
     
     def requiere_mantenimiento(self):
-        if self._kilometros < 0:
-            "No puede tener valores negativos"
-            pass
-        
+        raise NotImplementedError("Este método debe ser sobrescrito por las clases hijas")
+
 class furgoneta(vehiculo):
     def requiere_mantenimiento(self):
-        if self._kilometros >= 15000:
-            "El vehiculo requiere mantenimiento"
-        else:
-            "el vehiculo esta operativo"
-            return 
-    
+        return self.get_kilometros() >= 15000
+
 class VehiculoElectrico(vehiculo):
     def requiere_mantenimiento(self):
-        if self._kilometros >= 5000:
-            "El vehiculo requiere mantenimiento"
-        else:
-            "el vehiculo esta operativo"
-            return 
+        return self.get_kilometros() >= 5000
 
 datos = {
     "Matricula":["1552 VX", "1889 BG", "2555 HH"],
